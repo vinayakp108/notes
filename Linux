@@ -1,0 +1,205 @@
+
+mount -t xfs -o nouuid  /dev/nvme3n1 /mnt
+
+Aws space addition
+enable reboot check
+enable termination protection
+check storage 
+check utilization
+check input.yaml
+edit
+change volume (adding 1TB)
+cross verify Instance ID
+Run new
+LVM nitro extend 
+growpart /dev/nvme2n1 5
+xfs_growfs /dev/nvme2n1p5
+#########################################################################################################################################################################################
+
+Booting issue 
+mount /dev/nvme1n1p1 /mnt mount -o bind /dev /mnt/dev mount -o bind /sys /mnt/sys mount -o bind /proc /mnt/proc 
+mount -o bind /dev/pts /mnt/dev/pts 
+chroot /mnt /boot/grub/device.map --> file was updated to reflect the disk drive which was nvme1n1 
+grub-install--no-floppy /dev/nvme1n1 
+e2label /dev/nvme1n1p1 "/"
+###############################################################################################################################################################################
+
+EFS mounting
+ip:/ /cap nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 0 0
+
+cifs mounting
+PATH cifs vers=3.0,credentials=/etc/cifs_share,file_mode=0777,dir_mode=0777  0       0
+username=id
+password=
+domain=domain
+
+aws s3 sync /source s3://destination
+set cron "echo '@reboot /etc/esperandoroute.sh' >> /var/spool/cron/crontabs/root"
+
+nohup aws s3 sync s3://dir/ s3://destination-dir/ --source-region ap-south-1 --region ap-south-2 > test.txt &
+nohup aws s3 sync s3://source-dir s3://destination-dir --source-region ap-south-1 --region us-east-1 > test.txt &
+aws s3 cp s3://source-DOC-EXAMPLE-BUCKET/object.txt s3://destination-DOC-EXAMPLE-BUCKET/object.txt --acl bucket-owner-full-control
+aws s3 ls --summarize --human-readable --recursive s3://<bucket-name>/
+##############################################################################################################################################################################################
+
+###################################################################################################################################################################################
+
+Python installation
+Python 3.9
+ 
+copy python3.9 from softwares to /root
+tar -xvzf Python-3.9.16.tgz
+yum install wget yum-utils make gcc openssl-devel bzip2-devel libffi-devel zlib-devel sqlite*
+ 
+cd Python-3.9.16/
+./configure --prefix=/opt/python-3.9.16 --with-system-ffi --with-computed-gotos --enable-loadable-sqlite-extensions --enable-optimizations --with-openssl=/usr
+make -j ${nproc}
+make install
+ 
+Add in /etc/profile
+export PATH="/opt/python-3.9.16/bin:$PATH"
+OR
+cd /usr/bin/
+ln -s /opt/python3.9.16/bin/python3 python3
+ cd /usr/local/lib/python3.11/
+cp -rp site-packages site-packages_bkp
+chown -R s-fulkrume:root site-packages
+whereis pip3
+rm pip-3
+ln -s /usr/local/bin/pip3.11 pip3
+ 
+python3 -V
+ 
+pip3 -V
+
+export PYTHONUSERBASE=/path/to/custom/directory 
+export PATH=$PYTHONUSERBASE/bin:$PATH 
+
+
+#####################################################################################################################################################################################
+
+Mysql installation on amazon linux 2023
+
+https://dev.mysql.com/downloads/mysql/8.0.html
+ yum install mysql-community-* 
+ mysql --version
+ systemctl status mysqld.service
+ 
+ mysql-community-server-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1 bigboss users   3591533 Sep 17 20:22 mysql-community-client-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1 bigboss users   1428202 Sep 17 20:22 mysql-community-client-plugins-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1 bigboss users   7133399 Sep 17 20:22 mysql-community-devel-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1 bigboss users    569156 Sep 17 20:22 mysql-community-common-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1 bigboss users   1520673 Sep 17 20:22 mysql-community-libs-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1 bigboss users   4847209 Sep 17 20:22 mysql-community-debuginfo-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1 bigboss users  24341008 Sep 17 20:22 mysql-community-server-debug-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1 bigboss users   2382200 Sep 17 20:22 mysql-community-icu-data-files-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1 bigboss users 368375086 Sep 17 20:23 mysql-community-test-8.0.39-1.el9.x86_64.rpm
+
+
+Get initial password
+sudo grep 'temporary password' /var/log/mysqld.log :- copy password
+
+Secure mysql installation
+sudo mysql_secure_installation -p :- reset the new password
+Change the password for root ? :- skipping with blank enter
+Remove anonymous users? Y
+Disallow root login remotely? Y
+Remove test database and access to it? Y
+Reload privilege tables now? Y
+mysql -u root -p
+mysql> SHOW DATABASES;
+
+###############################################################################################################################################################################
+
+
+https://www.redhat.com/sysadmin/install-configure-postfix
+
+SMTP1P01.ad.example.com> [InternalId=41983305318579, Hostname=SMTP1P02.ad.example.com
+mynetworks = server1, server2
+myhostname = example.ad.crisil.com
+mydomain = ad.eample.com
+ cat /etc/postfix/main.cf |grep inet_interface
+ inet_interfaces = all
+ HELO ad.crisil.com
+ 
+ 
+
+MAIL FROM: source id
+
+RCPT TO: destination id
+
+DATA
+
+Subject: This is a postfix test  
+
+Hello,
+
+This is a test message for postfix 
+
+.
+##############################################################################################################################################################################################
+
+https://linuxconfig.org/how-to-turn-on-off-ip-forwarding-in-linux
+sysctl -w net.ipv4.ip_forward=1
+https://phoenixnap.com/kb/ssh-port-forwarding
+vi /etc/sysctl.d/1000-custom.conf
+sudo amazon-linux-extras install kernel-5.10 -y
+###############################################################################################################################################################################################
+logs analyze
+sed -n  '/^Nov  8/p' secure-20241110 
+sed -n '/2024-11-08/,/2024-11-09/p' messages-20241110
+######################################################################################################################################################################################
+
+Maven installation
+cd /opt/
+ wget https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.0.5/apache-maven-3.0.5-bin.tar.gz
+ cp /home/bigboss/apache-maven-3.0.5-bin.tar.gz .
+ tar -zxvf apache-maven-3.0.5-bin.tar.gz
+ ls -lrth
+vi /etc/profile.d/maven.sh
+ ll
+ ls -lrth
+mv apache-maven-3.0.5 mvn
+ls -lrth
+mv mvn maven
+ls -lrth
+ vi /etc/profile.d/maven.sh
+
+ mvn --version
+which mvn
+ll /opt/maven/bin/mvn
+ /opt/maven/bin/mvn --version
+ which mvn
+ mvn --version
+ ll /usr/bin/mvn
+ln -s /opt/maven/bin/mvn /usr/bin/mvn
+mvn --version
+
+export PATH=$PATH:$M2_HOME/bin
+export PATH=$PATH:$MAVEN_HOME/bin
+
+export M2_HOME=/opt/maven
+export MAVEN_HOME=/opt/maven
+#####################################################################################################################################################################################
+
+Nginx issue 
+115  13/01/25 15:25 cd /data/nginx/
+  116  13/01/25 15:25 ll
+  117  13/01/25 15:25 su - jenkinsicon
+  118  13/01/25 15:26 dnf install pcre
+  119  13/01/25 15:26 su - jenkinsicon
+  120  13/01/25 15:27 dnf install /home/bigboss/compat-openssl10-1.0.2o-4.el8_6.x86_64.rpm
+  121  13/01/25 15:27 su - jenkinsicon
+  122  13/01/25 15:28 mkdir -p /usr/local/nginx/logs
+  123  13/01/25 15:28 cd /usr/local/
+  124  13/01/25 15:28 chown -R jenkinsicon: nginx
+  125  13/01/25 15:28 su - jenkinsicon
+  126  13/01/25 15:28 netstat -tlpn
+  127  13/01/25 15:28 cd
+  128  13/01/25 15:29 vim /data/nginx/conf/nginx.conf
+  129  13/01/25 15:30 netstat -tlpn | grep 9180
+  130  13/01/25 16:14 history
+
+#######################################################################################################################################################################
+
