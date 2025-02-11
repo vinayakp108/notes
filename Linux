@@ -37,7 +37,7 @@ chroot /mnt /boot/grub/device.map --> file was updated to reflect the disk drive
 grub-install--no-floppy /dev/nvme1n1 
 e2label /dev/nvme1n1p1 "/"
 
-sudo amazon-linux-extras install kernel-5.15 -y
+ amazon-linux-extras install kernel-5.15 -y
 
 IpV4 services
 -Djava.net.preferIPv4Stack=true
@@ -234,12 +234,12 @@ export MAVEN_HOME=/opt/maven
 Nginx issue and installation
 
 Nginx installation 
-$ sudo amazon-linux-extras enable nginx1
+$ amazon-linux-extras enable nginx1
  38  nginx1=latest            enabled      [ =stable ]
         
 Now you can install:
-$ sudo yum clean metadata
-$ sudo yum -y install nginx
+$ yum clean metadata
+$ yum -y install nginx
     
 $ nginx -v
 nginx version: nginx/1.16.1
@@ -296,7 +296,7 @@ Disable core files
 https://linux-audit.com/understand-and-configure-core-dumps-work-on-linux/#linux-and-core-dumps
 
 To get EBS volume in sevrer 
-sudo /sbin/ebsnvme-id /dev/nvme1n1
+ /sbin/ebsnvme-id /dev/nvme1n1
 ##################################################################################################################################################################################################
 
 change grub version
