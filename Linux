@@ -42,6 +42,13 @@ aws s3 cp s3://source-DOC-EXAMPLE-BUCKET/object.txt s3://destination-DOC-EXAMPLE
 aws s3 ls --summarize --human-readable --recursive s3://<bucket-name>/
 ##############################################################################################################################################################################################
 
+SSL certificate installation
+SSL certificate
+cp ca.pem /etc/pki/ca-trust/source/anchors/
+  898  update-ca-trust
+  899  update-ca-trust enable
+  900  curl https://url
+  901  history
 ###################################################################################################################################################################################
 
 Python installation
@@ -214,4 +221,25 @@ vi /etc/fstab
 UUID=70c67fd0-9a23-468a-9c12-01a4de694827    /data   xfs     defaults        0       0
 ############################################################################################################################################################################################
 
+Disable core files
+/etc/systemd/coredump.conf :- Storage=none ProcessSizeMax=0
+https://linux-audit.com/understand-and-configure-core-dumps-work-on-linux/#linux-and-core-dumps
 
+To get EBS volume in sevrer 
+sudo /sbin/ebsnvme-id /dev/nvme1n1
+##################################################################################################################################################################################################
+
+change grub version
+493  24/04/24 22:38 sudo grub2-editenv list
+  494  24/04/24 22:38 cat /boot/grub2/grub.cfg
+  495  24/04/24 22:38 vim /boot/grub2/grub.cfg
+  496  24/04/24 22:39 uname -a
+  497  24/04/24 22:40 grubby --default-kernel
+  498  24/04/24 22:41 rpm -qa kernel
+  499  24/04/24 22:42 cat /etc/default/grub
+  500  24/04/24 22:42 vim /etc/default/grub
+  501  24/04/24 22:44 vim /boot/grub2/grub.cfg
+  502  24/04/24 22:47 grubby --set-default /boot/vmlinuz-5.10.205-195.804.amzn2.x86_64
+  503  24/04/24 22:47 grubby --default-kernel
+  504  24/04/24 22:49 reboot
+#############################################################################################################################################################################################
