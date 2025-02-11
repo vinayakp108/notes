@@ -1,5 +1,19 @@
-
+mount /mnt 
 mount -t xfs -o nouuid  /dev/nvme3n1 /mnt
+##################################################################################################################################################################
+
+filesystem /root issue 
+du -hx --max-depth=1 /|sort -rn |head
+cd /
+# df -hT .
+# du -shx *
+# du -schx .[!.]* * 2>/dev/null | sort -hr
+# mkdir /bind
+# mount -o bind / /bind
+# cd /bind
+# du -shx *
+# du -schx .[!.]* * 2>/dev/null | sort -hr
+###############################################################################################################################################################
 
 Aws space addition
 enable reboot check
@@ -22,6 +36,13 @@ mount -o bind /dev/pts /mnt/dev/pts
 chroot /mnt /boot/grub/device.map --> file was updated to reflect the disk drive which was nvme1n1 
 grub-install--no-floppy /dev/nvme1n1 
 e2label /dev/nvme1n1p1 "/"
+
+sudo amazon-linux-extras install kernel-5.15 -y
+
+IpV4 services
+-Djava.net.preferIPv4Stack=true
+
+
 ###############################################################################################################################################################################
 
 EFS mounting
@@ -49,6 +70,27 @@ cp ca.pem /etc/pki/ca-trust/source/anchors/
   899  update-ca-trust enable
   900  curl https://url
   901  history
+
+Apache service
+ vi /usr/local/apache2/conf/extra/sem_gateway_443.conf
+ vi /usr/local/apache2/conf/extra/sem_443.conf
+   SSLCertificateFile    /etc/apache2/crisil-sslnew/crisil.crt
+       SSLCertificateKeyFile  /etc/apache2/crisil-sslnew/server.key
+       SSLCACertificateFile  /etc/apache2/crisil-sslnew/intermediate.crt
+
+/etc/apache2/crisil-sslnew
+/usr/local/apache2/bin/apachectl start
+
+ vi /usr/local/apache2/conf/extra/sem_443.conf
+ SSLCertificateFile    /etc/apache2/crisil-ssl/sempilot_rmu_crisil_com.crt
+ SSLCertificateKeyFile /etc/apache2/crisil-ssl/sempilot_rmu_crisil_com.key
+ SSLCACertificateFile  /etc/apache2/crisil-ssl/Thawte_Intermediate_Bundle.crt
+/etc/apache2/crisil-sslnew/crisil.crt
+
+Openssl certificate format change 
+openssl x509 -outform der -in rds-combined-ca-bundle.pem -out rds-combined-ca-bundle.crt
+openssl pkcs12 -export -out qawittyapi-cloud.ad.crisil.com.pfx -inkey qawittyapi-cloud.ad.crisil.com.key -in qawittyapi-cloud.ad.crisil.com.crt
+openssl rsa -in wittyparrot.key -out wittyparrot.key
 ###################################################################################################################################################################################
 
 Python installation
@@ -82,7 +124,7 @@ pip3 -V
 export PYTHONUSERBASE=/path/to/custom/directory 
 export PATH=$PYTHONUSERBASE/bin:$PATH 
 
-
+ln -s /usr/bin/python2.x /usr/bin/python 
 #####################################################################################################################################################################################
 
 Mysql installation on amazon linux 2023
@@ -145,14 +187,15 @@ This is a test message for postfix
 .
 ##############################################################################################################################################################################################
 
-https://linuxconfig.org/how-to-turn-on-off-ip-forwarding-in-linux
-sysctl -w net.ipv4.ip_forward=1
-https://phoenixnap.com/kb/ssh-port-forwarding
-vi /etc/sysctl.d/1000-custom.conf
+https://linuxconfig.org/how-to-turn-on-off-ip-forwarding-in-linux                            sudo issue 
+sysctl -w net.ipv4.ip_forward=1                                                              chmod 644 /usr/libexec/sudo/sudoers.so
+https://phoenixnap.com/kb/ssh-port-forwarding                                                chmod 4111 /usr/bin/sudo
+vi /etc/sysctl.d/1000-custom.conf                                                            chmod 4755 /usr/bin/su
 sudo amazon-linux-extras install kernel-5.10 -y
 ###############################################################################################################################################################################################
-logs analyze
-sed -n  '/^Nov  8/p' secure-20241110 
+
+logs analyze                                                                              Rescue mode network in redhat
+sed -n  '/^Nov  8/p' secure-20241110                                                      https://access.redhat.com/solutions/2626631
 sed -n '/2024-11-08/,/2024-11-09/p' messages-20241110
 ######################################################################################################################################################################################
 
@@ -188,7 +231,20 @@ export M2_HOME=/opt/maven
 export MAVEN_HOME=/opt/maven
 #####################################################################################################################################################################################
 
-Nginx issue 
+Nginx issue and installation
+
+Nginx installation 
+$ sudo amazon-linux-extras enable nginx1
+ 38  nginx1=latest            enabled      [ =stable ]
+        
+Now you can install:
+$ sudo yum clean metadata
+$ sudo yum -y install nginx
+    
+$ nginx -v
+nginx version: nginx/1.16.1
+
+ISSUE:-
 115  13/01/25 15:25 cd /data/nginx/
   116  13/01/25 15:25 ll
   117  13/01/25 15:25 su - jenkinsicon
@@ -219,6 +275,20 @@ UUID="93fa4c25-1df1-4b46-abdf-0936694cc80c"
 mkdir /data
 vi /etc/fstab
 UUID=70c67fd0-9a23-468a-9c12-01a4de694827    /data   xfs     defaults        0       0
+
+for exsiting mount point extension
+echo 1 > /sys/block/sdb/device/rescan
+pvresize /dev/sdb
+lvextend -An -L  +1G /dev/mapper/MySQL_Dir_VG-MySQLDir_LV -r
+
+for new partition
+ echo " - - - " > /sys/class/scsi_host/host0/scan
+ echo " - - - " > /sys/class/scsi_host/host1/scan
+ echo " - - - " > /sys/class/scsi_host/host2/scan
+
+ lvs -a -o +devices
+vgs -o +devices
+ lvs -o +devices lvname
 ############################################################################################################################################################################################
 
 Disable core files
@@ -243,3 +313,20 @@ change grub version
   503  24/04/24 22:47 grubby --default-kernel
   504  24/04/24 22:49 reboot
 #############################################################################################################################################################################################
+
+TCPDUMP command 
+ tcpdump -i eth0 port 88 or port 464 -s0 == tcpdump -i any  -nn port 1500 -vvv
+tcpdump -i any -c20 -nn port 1500   tcpdump -i any -c10 -nn dst 172.18.44.42 and port 22
+#########################################################################################################################################################################################
+
+Java                                                                                               Node.js
+java issue --- "alternatives --config java"                                                        After install node.js package on server 
+Vi /etc/profile                                                                                    vi .bashrc
+Vi bash_profile                                                                                    PATH=$PATH:$HOME/bin
+export JAVA_HOME=/data/java-11-openjdk-11.0.13.0.8-1.el7_9.x86_64/bin/java                         export NODEJS_HOME="/path/uiappbuilder/nodejs/node-v12.18.3-linux-x64"
+source .bash_profile                                                                               export PATH=$NODEJS_HOME/bin:$PATH:.
+vi .bashrc
+alias java=/data/java-11-openjdk-11.0.13.0.8-1.el7_9.x86_64/bin/java
+###############################################################################################################################################################################################
+
+
