@@ -86,15 +86,15 @@ https://dev.mysql.com/downloads/mysql/8.0.html
  systemctl status mysqld.service
  
  mysql-community-server-8.0.39-1.el9.x86_64.rpm
--rw-r-----. 1 bigboss users   3591533 Sep 17 20:22 mysql-community-client-8.0.39-1.el9.x86_64.rpm
--rw-r-----. 1 bigboss users   1428202 Sep 17 20:22 mysql-community-client-plugins-8.0.39-1.el9.x86_64.rpm
--rw-r-----. 1 bigboss users   7133399 Sep 17 20:22 mysql-community-devel-8.0.39-1.el9.x86_64.rpm
--rw-r-----. 1 bigboss users    569156 Sep 17 20:22 mysql-community-common-8.0.39-1.el9.x86_64.rpm
--rw-r-----. 1 bigboss users   1520673 Sep 17 20:22 mysql-community-libs-8.0.39-1.el9.x86_64.rpm
--rw-r-----. 1 bigboss users   4847209 Sep 17 20:22 mysql-community-debuginfo-8.0.39-1.el9.x86_64.rpm
--rw-r-----. 1 bigboss users  24341008 Sep 17 20:22 mysql-community-server-debug-8.0.39-1.el9.x86_64.rpm
--rw-r-----. 1 bigboss users   2382200 Sep 17 20:22 mysql-community-icu-data-files-8.0.39-1.el9.x86_64.rpm
--rw-r-----. 1 bigboss users 368375086 Sep 17 20:23 mysql-community-test-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1  users   3591533 Sep 17 20:22 mysql-community-client-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1  users   1428202 Sep 17 20:22 mysql-community-client-plugins-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1  users   7133399 Sep 17 20:22 mysql-community-devel-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1  users    569156 Sep 17 20:22 mysql-community-common-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1  users   1520673 Sep 17 20:22 mysql-community-libs-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1  users   4847209 Sep 17 20:22 mysql-community-debuginfo-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1  users  24341008 Sep 17 20:22 mysql-community-server-debug-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1  users   2382200 Sep 17 20:22 mysql-community-icu-data-files-8.0.39-1.el9.x86_64.rpm
+-rw-r-----. 1  users 368375086 Sep 17 20:23 mysql-community-test-8.0.39-1.el9.x86_64.rpm
 
 
 Get initial password
@@ -115,7 +115,7 @@ mysql> SHOW DATABASES;
 
 https://www.redhat.com/sysadmin/install-configure-postfix
 
-SMTP1P01.ad.example.com> [InternalId=41983305318579, Hostname=SMTP1P02.ad.example.com
+SMTP1P01.ad.example.com> [InternalId=, Hostname=SMTP1P02.ad.example.com
 mynetworks = server1, server2
 myhostname = example.ad.crisil.com
 mydomain = ad.eample.com
@@ -123,8 +123,6 @@ mydomain = ad.eample.com
  inet_interfaces = all
  HELO ad.crisil.com
  
- 
-
 MAIL FROM: source id
 
 RCPT TO: destination id
@@ -202,4 +200,18 @@ Nginx issue
   130  13/01/25 16:14 history
 
 #######################################################################################################################################################################
+
+LVM commands
+lsblk
+pvcreate /dev/nvme2n1
+vgcreate vg_data /dev/nvme2n1
+lvcreate -n lv_data -L 99.99GB vg_data
+mkfs.xfs /dev/vg_data/lv_data
+blkid /dev/vg_data/lv_data
+UUID="93fa4c25-1df1-4b46-abdf-0936694cc80c"
+mkdir /data
+vi /etc/fstab
+UUID=70c67fd0-9a23-468a-9c12-01a4de694827    /data   xfs     defaults        0       0
+############################################################################################################################################################################################
+
 
